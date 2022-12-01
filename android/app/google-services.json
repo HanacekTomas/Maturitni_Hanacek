@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "78498386515",
+    "project_id": "aplikace-b07a3",
+    "storage_bucket": "aplikace-b07a3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78498386515:android:02bbff2fbf492c011e2ca6",
+        "android_client_info": {
+          "package_name": "com.example.prihlasovani"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78498386515-kchj3qo9h7af9b052agkap9aqtt8hjbt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgjcYvblHaBnYIASelJyNftIwRFQjlZhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78498386515-kchj3qo9h7af9b052agkap9aqtt8hjbt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
