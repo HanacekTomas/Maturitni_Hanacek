@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import '../auth.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,16 +16,18 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _controllerEmail = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
 
-  Future<void> signInWithEmailAndPassowrd() async {
+  Future<void> signInWithEmailAndPassword() async {
     try {
       await Auth().signInWithEmailAndPassword(
         email: _controllerEmail.text,
         password: _controllerPassword.text,
       );
     } on FirebaseAuthException catch (e) {
+      setState(() {
+        errorMessage = e.message;
+      });
     }
   }
-
   Future<void> createUserWithEmailAndPassword() async {
     try {
       await Auth().createUserWithEmailAndPassword(
@@ -43,7 +42,7 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _title() {
-    return const Text('Registrace a přihlášení');
+    return const Text('Firebase Auth');
   }
 
   Widget _entryField(
@@ -58,15 +57,15 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Widget _errorMessage() {
-    return Text(errorMessage == '' ? '' : 'Pole musí být vyplněné');
+Widget _errorMessage() {
+    return Text(errorMessage == '' ? '' : 'Humm ? $errorMessage');
   }
 
   Widget _submitButton() {
     return ElevatedButton(
       onPressed:
-          isLogin ? signInWithEmailAndPassowrd : createUserWithEmailAndPassword,
-      child: Text(isLogin ? 'Přihlášení' : 'Registrace'),
+          isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword,  
+      child: Text(isLogin ? 'Login' : 'Register'),
     );
   }
 
@@ -77,10 +76,9 @@ class _LoginPageState extends State<LoginPage> {
           isLogin = !isLogin;
         });
       },
-      child: Text(isLogin ? 'Zaregistrovat se' : 'Přihlásit se'),
+      child: Text(isLogin ? 'Register instead' : 'Login instead'),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -96,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             _entryField('email', _controllerEmail),
-            _entryField('heslo', _controllerPassword),
+            _entryField('password', _controllerPassword),
             _errorMessage(),
             _submitButton(),
             _loginOrRegisterButton(),

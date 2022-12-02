@@ -1,6 +1,6 @@
 import 'package:prihlasovani/auth.dart';
-import 'package:prihlasovani/pages/prihlaseni_a_registrace.dart';
 import 'package:prihlasovani/pages/home_page.dart';
+import 'package:prihlasovani/pages/prihlaseni_a_registrace.dart';
 import 'package:flutter/material.dart';
 
 class WidgetTree extends StatefulWidget {
