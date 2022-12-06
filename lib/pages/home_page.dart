@@ -1,53 +1,107 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:prihlasovani/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:slidovaci_apka/stranky/resit.dart';
+import 'package:slidovaci_apka/stranky/nastaveni.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
-  final User? user = Auth().currentUser;
-
-  Future<void> signOut() async {
-    await Auth().signOut();
-  }
-
-  Widget _title() {
-    return const Text('Docházka');
-  }
-
-  Color _barva = Colors.red;
-
-  var index = 0;
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _stranka = 0;
+
+  final stranky = [
+    HomePage(),
+    Resit(),
+    Nastaveni(),
+  ];
+
+    @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: _title(),
-      ),
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        child: ListView(
-          children: [
-            Card(
-              child: ListTile(
-                  title: Text('❌'),
-                  tileColor: _barva,
-                  onTap: () {
-                    if (_barva == Colors.red) {
-                      setState(() {
-                        _barva = Colors.green;
-                      });
-                    }
-                  },
-                  onLongPress: () {}),
-            ),
-          ],
+        title: Text("Docházka"),
         ),
+      body: Container(
+        child:  Slidable(
+          startActionPane: ActionPane(
+            motion: StretchMotion(),
+            children: [
+              SlidableAction(
+                onPressed: ((context){
+                  //přítomen
+                  print("Přítomen");
+              }),
+              backgroundColor: Colors.green,
+              icon: Icons.check,
+              ),
+              SlidableAction(
+                onPressed: ((context){
+                  //pozdě/brzo
+                  print("Pozdě/Brzo");
+              }),
+              backgroundColor: Color.fromARGB(255, 252, 183, 81),
+              icon: Icons.alarm,
+              ),
+            ],
+          ),
+          endActionPane: ActionPane(
+            motion: StretchMotion(),
+            children: [
+              SlidableAction(
+                onPressed: ((context){
+                  //nepřítomen
+                  print("Nepřítomen");
+              }),
+              backgroundColor: Colors.red,
+              icon: Icons.close,
+              ),
+            ],
+          ),
+          child: Container(
+            color: Colors.grey[300],
+            child: ListTile(
+              title: Text("sdffsfs"),
+              subtitle: Text("saftrčgrv"),
+              leading: Icon(
+                Icons.person,
+                size: 40,
+              ),
+            ),
+          ),
+        ) ,
       ),
+      bottomNavigationBar: BottomNavigationBar(
+      currentIndex: _stranka,
+      backgroundColor: Colors.blueGrey,
+      selectedItemColor: Colors.white,
+      showUnselectedLabels: false,
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person), 
+            label: "Docházka",
+            ),
+            BottomNavigationBarItem(
+            icon: Icon(Icons.edit),
+            label: "Nevyřešené", 
+
+            ),
+            BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: "Nastavení", 
+            ),
+        ],
+        onTap: (index) {
+          setState(() {
+            _stranka = index;
+          });
+        },
+        ),
     );
   }
-
-  void setState(Null Function() param0) {}
 }
+
+
