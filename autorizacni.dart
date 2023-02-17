@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tadytento/auth/registrace.dart';
-import 'package:tadytento/stranky/prihlaseni.dart';
+import 'package:tadytento/auth/prihlaseni.dart';
 
 class Autorizacni extends StatefulWidget {
   const Autorizacni({super.key});

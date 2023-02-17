@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tadytento/auth/autorizacni.dart';
 import 'package:tadytento/stranky/hlavniStranka.dart';
-import 'package:tadytento/stranky/prihlaseni.dart';
+import 'package:tadytento/auth/prihlaseni.dart';
 
 class Cesty extends StatefulWidget {
   const Cesty({super.key});
@@ -19,7 +19,9 @@ class _CestyState extends State<Cesty> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HlavniStranka();
+            return HlavniStranka(
+              nazevLekce: '', 
+            );
           } else {
             return Autorizacni();
           }

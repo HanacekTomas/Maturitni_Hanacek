@@ -2,15 +2,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:tadytento/stranky/zapsani.dart';
+import 'lide.dart';
 import 'package:tadytento/stranky/vytvoreniLekce.dart';
+import 'dart:math';
 
-class HlavniStranka extends StatelessWidget {
-  HlavniStranka({Key? key}) : super(key: key);
+class HlavniStranka extends StatefulWidget {
+  const HlavniStranka({
+    Key? key,
+    required this.nazevLekce,
+  }) : super(key: key);
 
-  final Stream<QuerySnapshot> nakyData =
-      FirebaseFirestore.instance.collection('data').snapshots();
+  final String nazevLekce;
+
+  @override
+  State<HlavniStranka> createState() => _HlavniStrankaState();
+}
+
+class _HlavniStrankaState extends State<HlavniStranka> {
+  late Stream<QuerySnapshot> nakyData = FirebaseFirestore.instance
+      .collection('data')
+      .where("nazevLekce", isEqualTo: widget.nazevLekce)
+      .snapshots();
+
+  var nahodne = Random().nextInt(30);
 
   var Datum = '';
 
@@ -23,19 +39,29 @@ class HlavniStranka extends StatelessWidget {
     CollectionReference data = FirebaseFirestore.instance.collection('data');
     return Scaffold(
       appBar: AppBar(
-        title: Text(prihlasenyUzivatel.email!),
+        automaticallyImplyLeading: false,
+        title: Text(widget.nazevLekce),
         actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => SeznamLidi()),
+              );
+            },
+            icon: Icon(Icons.supervisor_account),
+          ),
           PopupMenuButton(
               icon: Icon(Icons.more_vert),
               itemBuilder: (context) {
                 return [
                   PopupMenuItem<int>(
                     value: 0,
-                    child: Text("Přidat lekci"),
+                    child: Text("Přidat/Vybrat lekci"),
                   ),
                   PopupMenuItem<int>(
                     value: 1,
-                    child: Text("Nastavení"),
+                    child: Text("Tmavý/Světlý režim"),
                   ),
                   PopupMenuItem<int>(
                     value: 2,
@@ -49,10 +75,12 @@ class HlavniStranka extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const VytvoreniLekce()),
+                        builder: (context) => VytvoreniLekce(
+                              aktualniUzivatel: '${prihlasenyUzivatel.email!}',
+                            )),
                   );
                 } else if (value == 1) {
-                  print("Settings menu is selected.");
+                  
                 } else if (value == 2) {
                   FirebaseAuth.instance.signOut();
                 }
@@ -78,9 +106,19 @@ class HlavniStranka extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
-                    title: Text('${nejakaData.docs[index]['Datum']}'),
+                    title: Text('${nejakaData.docs[index]['datum']}'),
                     trailing: IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ZapsaniDochazky(
+                                    datumDochazky:
+                                        '${nejakaData.docs[index]['datum']}',
+                                    nazevLekce: '${widget.nazevLekce}',
+                                  )),
+                        );
+                      },
                       icon: Icon(Icons.arrow_circle_right),
                     ),
                   ),
@@ -92,8 +130,14 @@ class HlavniStranka extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          FirebaseFirestore.instance.collection('data').add({
-            'Datum': '${DateFormat('dd.MM.yyyy').format(_datumDnesni)}',
+          FirebaseFirestore.instance
+              .collection('data')
+              .doc(
+                  '${DateFormat('dd.MM.yyyy').format(_datumDnesni)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!} - ${Random().nextInt(30)}')
+              .set({
+            'datum': '${DateFormat('dd.MM.yyyy').format(_datumDnesni)}',
+            'ucetLekce': '${prihlasenyUzivatel.email!}',
+            'nazevLekce': '${widget.nazevLekce}'
           });
         },
         icon: Icon(Icons.add),
