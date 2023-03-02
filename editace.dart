@@ -11,8 +11,10 @@ class EditovaniCloveka extends StatefulWidget {
     required this.kontakt1,
     required this.kontakt2,
     required this.zaplaceno,
+    required this.prihlasenyUzivatel,
   }) : super(key: key);
 
+  final String prihlasenyUzivatel;
   final String jmeno;
   final String prijmeni;
   final String bydliste;
@@ -41,8 +43,10 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
   final Stream<QuerySnapshot> editovanaData =
       FirebaseFirestore.instance.collection('zaci').snapshots();
 
-  final Stream<QuerySnapshot> krouzekData =
-      FirebaseFirestore.instance.collection('lekce').snapshots();
+  late Stream<QuerySnapshot> krouzekData = FirebaseFirestore.instance
+      .collection('lekce')
+      .where('ucetLekce', isEqualTo: widget.prihlasenyUzivatel)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -255,6 +259,14 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                                                 krouzek =
                                                     '${krouzekData.docs[index]['nazevLekce']}';
                                               });
+                                              FirebaseFirestore.instance
+                                                  .collection('zaci')
+                                                  .doc(
+                                                      '${widget.jmeno} ${widget.prijmeni}')
+                                                  .update({
+                                                'krouzek': '${krouzek}',
+                                              });
+                                              Navigator.of(context).pop();
                                             },
                                           ),
                                         );
@@ -262,20 +274,6 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                                     );
                                   },
                                 ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Zrušit"),
-                                  ),
-                                  TextButton(
-                                    child: const Text('Přidat'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
                               );
                             },
                           );

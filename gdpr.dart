@@ -4,7 +4,10 @@ import 'package:tadytento/stranky/editace.dart';
 import 'package:tadytento/stranky/pridatCloveka.dart';
 
 class NeniGDPR extends StatefulWidget {
-  const NeniGDPR({super.key});
+  const NeniGDPR({super.key, required this.prihlasenyUzivatel});
+
+  final prihlasenyUzivatel;
+
   @override
   State<NeniGDPR> createState() => _NeniGDPRState();
 }
@@ -68,6 +71,7 @@ class _NeniGDPRState extends State<NeniGDPR> {
                               kontakt2: '${asiData.docs[index]['kontakt2']}',
                               prijmeni: '${asiData.docs[index]['prijmeni']}',
                               zaplaceno: '${asiData.docs[index]['zaplaceno']}',
+                              prihlasenyUzivatel: widget.prihlasenyUzivatel,
                             ),
                           ),
                         );

@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:tadytento/stranky/hlavniStranka.dart';
 
 class VytvoreniLekce extends StatefulWidget {
-  const VytvoreniLekce({Key? key, required this.aktualniUzivatel})
+  const VytvoreniLekce(
+      {Key? key, required this.aktualniUzivatel, required this.vybranaLekce})
       : super(key: key);
 
   final String aktualniUzivatel;
+  final String vybranaLekce;
 
   @override
   State<VytvoreniLekce> createState() => _VytvoreniLekceState();
@@ -30,7 +32,7 @@ class _VytvoreniLekceState extends State<VytvoreniLekce> {
     CollectionReference data = FirebaseFirestore.instance.collection('lekce');
     return Scaffold(
       appBar: AppBar(
-        title: Text("Vytvořte lekci"),
+        title: Text("Vytvořte/Vyberte lekci"),
       ),
       body: Center(
         child: StreamBuilder<QuerySnapshot>(
@@ -64,7 +66,7 @@ class _VytvoreniLekceState extends State<VytvoreniLekce> {
                           ),
                         );
                       },
-                      icon: Icon(Icons.arrow_circle_right),
+                      icon: Icon(Icons.arrow_forward_ios),
                     ),
                   ),
                 );

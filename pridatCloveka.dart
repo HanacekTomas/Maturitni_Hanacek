@@ -1,8 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PridatLidi extends StatefulWidget {
-  const PridatLidi({super.key});
+  const PridatLidi(
+      {super.key,
+      required this.prihlasenyUzivatel,
+      });
+
+  final String prihlasenyUzivatel;
+
   @override
   State<PridatLidi> createState() => _PridatLidiState();
 }
@@ -20,11 +27,15 @@ class _PridatLidiState extends State<PridatLidi> {
 
   String krouzek = '';
 
+  final prihlasenyUzivatel = FirebaseAuth.instance.currentUser!.email;
+
   final Stream<QuerySnapshot> zaciData =
       FirebaseFirestore.instance.collection('zaci').snapshots();
 
-  final Stream<QuerySnapshot> data =
-      FirebaseFirestore.instance.collection('lekce').snapshots();
+  late Stream<QuerySnapshot> data = FirebaseFirestore.instance
+      .collection('lekce')
+      .where('ucetLekce', isEqualTo: widget.prihlasenyUzivatel)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -167,44 +178,34 @@ class _PridatLidiState extends State<PridatLidi> {
                             builder: (BuildContext context) {
                               return AlertDialog(
                                 title: const Text('Vyberte'),
-                                content: StreamBuilder<QuerySnapshot>(
-                                  stream: data,
-                                  builder: (BuildContext context,
-                                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                                    final pridatData = snapshot.requireData;
-                                    return ListView.builder(
-                                      itemCount: pridatData.size,
-                                      itemBuilder: (context, index) {
-                                        return Card(
-                                          child: ListTile(
-                                            title: Text(
-                                                '${pridatData.docs[index]['nazevLekce']}'),
-                                            onTap: () {
-                                              setState(() {
-                                                krouzek =
-                                                    '${pridatData.docs[index]['nazevLekce']}';
-                                              });
-                                            },
-                                          ),
-                                        );
-                                      },
-                                    );
-                                  },
+                                content: SingleChildScrollView(
+                                  child: StreamBuilder<QuerySnapshot>(
+                                    stream: data,
+                                    builder: (BuildContext context,
+                                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                                      final pridatData = snapshot.requireData;
+                                      return ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount: pridatData.size,
+                                        itemBuilder: (context, index) {
+                                          return Card(
+                                            child: ListTile(
+                                              title: Text(
+                                                  '${pridatData.docs[index]['nazevLekce']}'),
+                                              onTap: () {
+                                                setState(() {
+                                                  krouzek =
+                                                      '${pridatData.docs[index]['nazevLekce']}';
+                                                });
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
                                 ),
-                                actions: <Widget>[
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text("Zrušit"),
-                                  ),
-                                  TextButton(
-                                    child: const Text('Přidat'),
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                  ),
-                                ],
                               );
                             },
                           );
@@ -256,6 +257,7 @@ class _PridatLidiState extends State<PridatLidi> {
               'gdpr': '${potvrzeno}',
               'krouzek': '${krouzek}',
               'poznamka': '${poznamkaController.text}',
+              'vytvorenoUctem': '${prihlasenyUzivatel}',
             });
             _vymazVse();
           }

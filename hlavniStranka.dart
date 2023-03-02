@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +34,37 @@ class _HlavniStrankaState extends State<HlavniStranka> {
 
   DateTime _datumDnesni = DateTime.now();
 
+  DateTime _datumNaPozdej = DateTime.now();
+
   final prihlasenyUzivatel = FirebaseAuth.instance.currentUser!;
+
+  void _ukazKalendar() {
+    showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime(2050),
+    ).then((value) {
+      setState(() {
+        _zvoleneDatum = value!;
+      });
+
+      
+
+      FirebaseFirestore.instance
+          .collection('data')
+          .doc(
+              '${DateFormat('dd.MM.yyyy').format(_zvoleneDatum)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!}') // popřípadě pokud by bylo více za den -->  - ${Random().nextInt(30)}
+          .set({
+        'upraveneDatum': '${DateFormat('dd|MM|yyyy').format(_zvoleneDatum)}',
+        'datum': '${DateFormat('dd.MM.yyyy').format(_zvoleneDatum)}',
+        'ucetLekce': '${prihlasenyUzivatel.email!}',
+        'nazevLekce': '${widget.nazevLekce}'
+      });
+    });
+  }
+
+  DateTime _zvoleneDatum = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +78,11 @@ class _HlavniStrankaState extends State<HlavniStranka> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SeznamLidi()),
+                MaterialPageRoute(
+                    builder: (context) => SeznamLidi(
+                          prihlasenyUzivatel: '${prihlasenyUzivatel.email!}',
+                          nazevLekce: widget.nazevLekce,
+                        )),
               );
             },
             icon: Icon(Icons.supervisor_account),
@@ -61,7 +97,7 @@ class _HlavniStrankaState extends State<HlavniStranka> {
                   ),
                   PopupMenuItem<int>(
                     value: 1,
-                    child: Text("Tmavý/Světlý režim"),
+                    child: Text("Přidat zpetně lekci"),
                   ),
                   PopupMenuItem<int>(
                     value: 2,
@@ -71,16 +107,24 @@ class _HlavniStrankaState extends State<HlavniStranka> {
               },
               onSelected: (value) {
                 if (value == 0) {
-                  print("Vytvořit lekci...");
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => VytvoreniLekce(
                               aktualniUzivatel: '${prihlasenyUzivatel.email!}',
+                              vybranaLekce: 'Lekce není vybrána',
                             )),
                   );
                 } else if (value == 1) {
-                  
+                  if (widget.nazevLekce == 'Lekce není vybraná') {
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text("Vyberte prosím lekci",
+                          style: TextStyle(color: Colors.white)),
+                      backgroundColor: Colors.red,
+                    ));
+                  } else {
+                    _ukazKalendar();
+                  }
                 } else if (value == 2) {
                   FirebaseAuth.instance.signOut();
                 }
@@ -114,12 +158,14 @@ class _HlavniStrankaState extends State<HlavniStranka> {
                           MaterialPageRoute(
                               builder: (context) => ZapsaniDochazky(
                                     datumDochazky:
-                                        '${nejakaData.docs[index]['datum']}',
+                                        '${nejakaData.docs[index]['upraveneDatum']}',
                                     nazevLekce: '${widget.nazevLekce}',
+                                    prihlasenyUzivatel:
+                                        '${prihlasenyUzivatel.email!}',
                                   )),
                         );
                       },
-                      icon: Icon(Icons.arrow_circle_right),
+                      icon: Icon(Icons.arrow_forward_ios),
                     ),
                   ),
                 );
@@ -128,21 +174,28 @@ class _HlavniStrankaState extends State<HlavniStranka> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          FirebaseFirestore.instance
-              .collection('data')
-              .doc(
-                  '${DateFormat('dd.MM.yyyy').format(_datumDnesni)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!} - ${Random().nextInt(30)}')
-              .set({
-            'datum': '${DateFormat('dd.MM.yyyy').format(_datumDnesni)}',
-            'ucetLekce': '${prihlasenyUzivatel.email!}',
-            'nazevLekce': '${widget.nazevLekce}'
-          });
-        },
-        icon: Icon(Icons.add),
-        label: Text("Přidat"),
-      ),
+      floatingActionButton: widget.nazevLekce == 'Lekce není vybraná'
+          ? FloatingActionButton(
+              onPressed: () {},
+              child: Icon(Icons.clear),
+            )
+          : FloatingActionButton.extended(
+              onPressed: () {
+                    FirebaseFirestore.instance
+                    .collection('data')
+                    .doc(
+                        '${DateFormat('dd.MM.yyyy').format(_datumDnesni)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!}') // popřípadě pokud by bylo více za den -->  - ${Random().nextInt(30)}
+                    .set({
+                  'upraveneDatum':
+                      '${DateFormat('dd|MM|yyyy').format(_datumDnesni)}',
+                  'datum': '${DateFormat('dd.MM.yyyy').format(_datumDnesni)}',
+                  'ucetLekce': '${prihlasenyUzivatel.email!}',
+                  'nazevLekce': '${widget.nazevLekce}',
+                });
+              },
+              icon: Icon(Icons.add),
+              label: Text("Přidat"),
+            ),
     );
   }
 }

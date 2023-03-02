@@ -20,7 +20,7 @@ class _CestyState extends State<Cesty> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return HlavniStranka(
-              nazevLekce: '', 
+              nazevLekce: 'Lekce není vybraná',
             );
           } else {
             return Autorizacni();

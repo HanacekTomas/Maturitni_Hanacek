@@ -1,12 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:tadytento/stranky/editace.dart';
 import 'package:tadytento/stranky/gdpr.dart';
 import 'package:tadytento/stranky/nezaplaceni.dart';
 import 'package:tadytento/stranky/pridatCloveka.dart';
 
 class SeznamLidi extends StatefulWidget {
-  const SeznamLidi({super.key});
+  const SeznamLidi(
+      {super.key, required this.prihlasenyUzivatel, required this.nazevLekce});
+
+  final String prihlasenyUzivatel;
+  final String nazevLekce;
+
   @override
   State<SeznamLidi> createState() => _SeznamLidiState();
 }
@@ -22,8 +29,10 @@ class _SeznamLidiState extends State<SeznamLidi> {
   final gdprController = new TextEditingController();
   final krouzekController = new TextEditingController();
 
-  final Stream<QuerySnapshot> zaseData =
-      FirebaseFirestore.instance.collection('zaci').snapshots();
+  late Stream<QuerySnapshot> zaseData = FirebaseFirestore.instance
+      .collection('zaci')
+      .where('vytvorenoUctem', isEqualTo: widget.prihlasenyUzivatel)
+      .snapshots();
 
   bool podminka = false;
 
@@ -31,6 +40,7 @@ class _SeznamLidiState extends State<SeznamLidi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: PopupMenuButton(
             icon: Icon(Icons.filter_list),
             itemBuilder: (context) {
@@ -51,11 +61,19 @@ class _SeznamLidiState extends State<SeznamLidi> {
             },
             onSelected: (value) {
               if (value == 0) {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => NeniGDPR()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NeniGDPR(
+                              prihlasenyUzivatel: widget.prihlasenyUzivatel,
+                            )));
               } else if (value == 1) {
-                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Nezaplaceno()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Nezaplaceno(
+                              prihlasenyUzivatel: widget.prihlasenyUzivatel,
+                            )));
               } else if (value == 2) {}
             }),
         actions: [
@@ -64,7 +82,9 @@ class _SeznamLidiState extends State<SeznamLidi> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => PridatLidi(),
+                  builder: (context) => PridatLidi(
+                    prihlasenyUzivatel: widget.prihlasenyUzivatel,
+                  ),
                 ),
               );
             },
@@ -180,6 +200,7 @@ class _SeznamLidiState extends State<SeznamLidi> {
                               kontakt2: '${asiData.docs[index]['kontakt2']}',
                               prijmeni: '${asiData.docs[index]['prijmeni']}',
                               zaplaceno: '${asiData.docs[index]['zaplaceno']}',
+                              prihlasenyUzivatel: widget.prihlasenyUzivatel,
                             ),
                           ),
                         );
