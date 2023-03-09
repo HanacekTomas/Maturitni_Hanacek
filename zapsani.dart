@@ -28,96 +28,247 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
       .where('krouzek', isEqualTo: widget.nazevLekce)
       .snapshots();
 
+  late Stream<QuerySnapshot> nejsouTady = FirebaseFirestore.instance
+      .collection('zaci')
+      .where('krouzek', isEqualTo: widget.nazevLekce)
+      .where('${widget.nazevLekce}.${widget.datumDochazky}',
+          isEqualTo: 'nepřítomen')
+      .snapshots();
+
+  late Stream<QuerySnapshot> jsouTady = FirebaseFirestore.instance
+      .collection('zaci')
+      .where('krouzek', isEqualTo: widget.nazevLekce)
+      .where('${widget.nazevLekce}.${widget.datumDochazky}',
+          isEqualTo: 'přítomen')
+      .snapshots();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.nazevLekce} - ${widget.datumDochazky}'),
-      ),
-      body: Container(
-        child: StreamBuilder<QuerySnapshot>(
-          stream: zapsaniDochazkyData,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError) {
-              return Text("Něco je špatně");
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Text('Načítám');
-            }
+    return DefaultTabController(
+      length: 3,
+      initialIndex: 1,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('${widget.nazevLekce} - ${widget.datumDochazky}'),
+          bottom: const TabBar(tabs: [
+            Tab(
+              icon: Icon(Icons.cancel_sharp),
+            ),
+            Tab(
+              icon: Icon(Icons.live_help),
+            ),
+            Tab(
+              icon: Icon(Icons.done_rounded),
+            ),
+          ]),
+        ),
+        body: TabBarView(
+          children: [
+            Container(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: nejsouTady,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Něco je špatně");
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text('Načítám');
+                  }
 
-            final dochazkoveData = snapshot.requireData;
+                  final dochazkoveData = snapshot.requireData;
 
-            return ListView.builder(
-              itemCount: dochazkoveData.size,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                      '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                  tileColor: Colors.white,
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.check,
-                            color: Color.fromARGB(255, 0, 134, 4)),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.green,
-                              content: Text(
-                                  "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} je přítomen")));
+                  return ListView.builder(
+                    itemCount: dochazkoveData.size,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        tileColor: Colors.white,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.check,
+                                  color: Color.fromARGB(255, 0, 134, 4)),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                        "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} je přítomen")));
 
-                          FirebaseFirestore.instance
-                              .collection('lekce')
-                              .doc('${widget.nazevLekce}')
-                              .update({
-                            '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
-                                'přítomen'
-                          });
+                                FirebaseFirestore.instance
+                                    .collection('lekce')
+                                    .doc('${widget.nazevLekce}')
+                                    .update({
+                                  '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
+                                      'přítomen'
+                                });
 
-                          FirebaseFirestore.instance
-                              .collection('zaci')
-                              .doc(
-                                  '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
-                              .update({
-                            '${widget.nazevLekce}.${widget.datumDochazky}':
-                                'přítomen'
-                          });
-                        },
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.clear,
-                            color: Color.fromARGB(255, 154, 18, 8)),
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                  "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} není přítomen")));
+                                FirebaseFirestore.instance
+                                    .collection('zaci')
+                                    .doc(
+                                        '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
+                                    .update({
+                                  '${widget.nazevLekce}.${widget.datumDochazky}':
+                                      'přítomen'
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Container(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: zapsaniDochazkyData,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Něco je špatně");
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text('Načítám');
+                  }
 
-                          FirebaseFirestore.instance
-                              .collection('lekce')
-                              .doc('${widget.nazevLekce}')
-                              .update({
-                            '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
-                                'nepřítomen'
-                          });
+                  final dochazkoveData = snapshot.requireData;
 
-                          FirebaseFirestore.instance
-                              .collection('zaci')
-                              .doc(
-                                  '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
-                              .update({
-                            '${widget.nazevLekce}.${widget.datumDochazky}':
-                                'nepřítomen',
-                          });
-                        },
-                      ),
-                    ],
-                  ),
-                );
-              },
-            );
-          },
+                  return ListView.builder(
+                    itemCount: dochazkoveData.size,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        tileColor: Colors.white,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.check,
+                                  color: Color.fromARGB(255, 0, 134, 4)),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    backgroundColor: Colors.green,
+                                    content: Text(
+                                        "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} je přítomen")));
+
+                                FirebaseFirestore.instance
+                                    .collection('lekce')
+                                    .doc('${widget.nazevLekce}')
+                                    .update({
+                                  '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
+                                      'přítomen'
+                                });
+
+                                FirebaseFirestore.instance
+                                    .collection('zaci')
+                                    .doc(
+                                        '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
+                                    .update({
+                                  '${widget.nazevLekce}.${widget.datumDochazky}':
+                                      'přítomen'
+                                });
+                              },
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.clear,
+                                  color: Color.fromARGB(255, 154, 18, 8)),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                        "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} není přítomen")));
+
+                                FirebaseFirestore.instance
+                                    .collection('lekce')
+                                    .doc('${widget.nazevLekce}')
+                                    .update({
+                                  '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
+                                      'nepřítomen'
+                                });
+
+                                FirebaseFirestore.instance
+                                    .collection('zaci')
+                                    .doc(
+                                        '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
+                                    .update({
+                                  '${widget.nazevLekce}.${widget.datumDochazky}':
+                                      'nepřítomen',
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Container(
+              child: StreamBuilder<QuerySnapshot>(
+                stream: jsouTady,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.hasError) {
+                    return Text("Něco je špatně");
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Text('Načítám');
+                  }
+
+                  final dochazkoveData = snapshot.requireData;
+
+                  return ListView.builder(
+                    itemCount: dochazkoveData.size,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(
+                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        tileColor: Colors.white,
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.clear,
+                                  color: Color.fromARGB(255, 154, 18, 8)),
+                              onPressed: () {
+                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Text(
+                                        "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} není přítomen")));
+
+                                FirebaseFirestore.instance
+                                    .collection('lekce')
+                                    .doc('${widget.nazevLekce}')
+                                    .update({
+                                  '${widget.datumDochazky}.${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}':
+                                      'nepřítomen'
+                                });
+
+                                FirebaseFirestore.instance
+                                    .collection('zaci')
+                                    .doc(
+                                        '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}')
+                                    .update({
+                                  '${widget.nazevLekce}.${widget.datumDochazky}':
+                                      'nepřítomen',
+                                });
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
