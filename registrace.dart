@@ -99,7 +99,7 @@ class _RegistraceState extends State<Registrace> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextField(
+                    child: TextFormField(
                       obscureText: true,
                       controller: _spravneHesloController,
                       decoration: InputDecoration(
@@ -123,9 +123,18 @@ class _RegistraceState extends State<Registrace> {
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: TextField(
+                    child: TextFormField(
                       obscureText: schovatHeslo,
                       controller: _hesloController,
+                      validator: (value) {
+                        if (value!.isEmpty || value.length < 6) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Text(
+                                  "Heslo musí obsahovat alespoň 6 znaků")));
+                        }
+                        return null;
+                      },
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
                           icon: Icon(Icons.remove_red_eye),
