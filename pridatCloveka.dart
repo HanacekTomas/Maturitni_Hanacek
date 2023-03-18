@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PridatLidi extends StatefulWidget {
-  const PridatLidi(
-      {super.key,
-      required this.prihlasenyUzivatel,
-      });
+  const PridatLidi({
+    super.key,
+    required this.prihlasenyUzivatel,
+  });
 
   final String prihlasenyUzivatel;
 
@@ -23,6 +24,8 @@ class _PridatLidiState extends State<PridatLidi> {
   final zaplacenoController = new TextEditingController();
   final poznamkaController = new TextEditingController();
 
+  String datumGDPR = '';
+
   bool potvrzeno = false;
 
   String krouzek = '';
@@ -36,6 +39,8 @@ class _PridatLidiState extends State<PridatLidi> {
       .collection('lekce')
       .where('ucetLekce', isEqualTo: widget.prihlasenyUzivatel)
       .snapshots();
+
+  DateTime _datumDnesni = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -156,7 +161,8 @@ class _PridatLidiState extends State<PridatLidi> {
                           onChanged: ((bool value) {
                             setState(() {
                               potvrzeno = value;
-                              //print(potvrzeno);
+                              datumGDPR =
+                                  DateFormat('dd.MM.yyyy').format(_datumDnesni);
                             });
                           }),
                         ),
@@ -258,6 +264,7 @@ class _PridatLidiState extends State<PridatLidi> {
               'krouzek': '${krouzek}',
               'poznamka': '${poznamkaController.text}',
               'vytvorenoUctem': '${prihlasenyUzivatel}',
+              'kdyGDPR': '${datumGDPR}',
             });
             _vymazVse();
           }

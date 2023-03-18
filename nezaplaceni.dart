@@ -6,7 +6,7 @@ import 'package:tadytento/stranky/pridatCloveka.dart';
 class Nezaplaceno extends StatefulWidget {
   const Nezaplaceno({super.key, required this.prihlasenyUzivatel});
 
-  final prihlasenyUzivatel;
+  final String prihlasenyUzivatel;
 
   @override
   State<Nezaplaceno> createState() => _NezaplacenoState();
@@ -23,9 +23,10 @@ class _NezaplacenoState extends State<Nezaplaceno> {
   final gdprController = new TextEditingController();
   final krouzekController = new TextEditingController();
 
-  final Stream<QuerySnapshot> zaseData = FirebaseFirestore.instance
+  late Stream<QuerySnapshot> zaseData = FirebaseFirestore.instance
       .collection('zaci')
       .where('zaplaceno', isEqualTo: '')
+      .where('vytvorenoUctem', isEqualTo: widget.prihlasenyUzivatel)
       .snapshots();
 
   bool podminka = false;
@@ -70,7 +71,7 @@ class _NezaplacenoState extends State<Nezaplaceno> {
                               kontakt1: '${asiData.docs[index]['kontakt1']}',
                               kontakt2: '${asiData.docs[index]['kontakt2']}',
                               prijmeni: '${asiData.docs[index]['prijmeni']}',
-                              zaplaceno: '${asiData.docs[index]['zaplaceno']}', 
+                              zaplaceno: '${asiData.docs[index]['zaplaceno']}',
                               prihlasenyUzivatel: widget.prihlasenyUzivatel,
                             ),
                           ),

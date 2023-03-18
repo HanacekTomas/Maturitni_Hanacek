@@ -2,10 +2,6 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:intl/intl.dart';
-import 'package:tadytento/stranky/pridatCloveka.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 class ZapsaniDochazky extends StatefulWidget {
   const ZapsaniDochazky(
@@ -82,9 +78,17 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                     itemCount: dochazkoveData.size,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(
-                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                        tileColor: Colors.white,
+                        title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                    'false' ||
+                                '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                    ''
+                            ? Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        tileColor: Color.fromARGB(255, 223, 166, 166),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -117,6 +121,79 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                             ),
                           ],
                         ),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: Icon(Icons.person),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.home),
+                                      title: '${dochazkoveData.docs[index]['bydliste']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['bydliste']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.contact_phone),
+                                      title: '${dochazkoveData.docs[index]['kontakt1']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.group),
+                                      title: '${dochazkoveData.docs[index]['krouzek']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['krouzek']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.monetization_on),
+                                      title: '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['zaplaceno']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.add_a_photo),
+                                      title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                              'false'
+                                          ? Text('Zakázáno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
+                                              style: TextStyle(
+                                                  color: Colors.green)),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.speaker_notes),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['poznamka']}'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                       );
                     },
                   );
@@ -141,8 +218,16 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                     itemCount: dochazkoveData.size,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(
-                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                    'false' ||
+                                '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                    ''
+                            ? Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
                         tileColor: Colors.white,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -203,6 +288,79 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                             ),
                           ],
                         ),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: Icon(Icons.person),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.home),
+                                      title: '${dochazkoveData.docs[index]['bydliste']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['bydliste']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.contact_phone),
+                                      title: '${dochazkoveData.docs[index]['kontakt1']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.group),
+                                      title: '${dochazkoveData.docs[index]['krouzek']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['krouzek']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.monetization_on),
+                                      title: '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['zaplaceno']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.add_a_photo),
+                                      title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                              'false'
+                                          ? Text('Zakázáno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
+                                              style: TextStyle(
+                                                  color: Colors.green)),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.speaker_notes),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['poznamka']}'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                       );
                     },
                   );
@@ -227,9 +385,17 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                     itemCount: dochazkoveData.size,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(
-                            '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                        tileColor: Colors.white,
+                        title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                    'false' ||
+                                '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                    ''
+                            ? Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
+                                style: TextStyle(color: Colors.red),
+                              )
+                            : Text(
+                                '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                        tileColor: Color.fromARGB(255, 162, 220, 175),
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -262,6 +428,79 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                             ),
                           ],
                         ),
+                        onTap: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context) {
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    ListTile(
+                                      leading: Icon(Icons.person),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.home),
+                                      title: '${dochazkoveData.docs[index]['bydliste']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['bydliste']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.contact_phone),
+                                      title: '${dochazkoveData.docs[index]['kontakt1']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.group),
+                                      title: '${dochazkoveData.docs[index]['krouzek']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['krouzek']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.monetization_on),
+                                      title: '${dochazkoveData.docs[index]['zaplaceno']}' ==
+                                              ''
+                                          ? Text('Nedoplněno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              '${dochazkoveData.docs[index]['zaplaceno']}'),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.add_a_photo),
+                                      title: '${dochazkoveData.docs[index]['gdpr']}' ==
+                                              'false'
+                                          ? Text('Zakázáno',
+                                              style:
+                                                  TextStyle(color: Colors.red))
+                                          : Text(
+                                              'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
+                                              style: TextStyle(
+                                                  color: Colors.green)),
+                                    ),
+                                    ListTile(
+                                      leading: Icon(Icons.speaker_notes),
+                                      title: Text(
+                                          '${dochazkoveData.docs[index]['poznamka']}'),
+                                    ),
+                                  ],
+                                );
+                              });
+                        },
                       );
                     },
                   );

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EditovaniCloveka extends StatefulWidget {
   EditovaniCloveka({
@@ -40,6 +41,8 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
 
   String krouzek = '';
 
+  String datumGDPR = '';
+
   final Stream<QuerySnapshot> editovanaData =
       FirebaseFirestore.instance.collection('zaci').snapshots();
 
@@ -48,11 +51,14 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
       .where('ucetLekce', isEqualTo: widget.prihlasenyUzivatel)
       .snapshots();
 
+  DateTime _datumDnesni = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Přidejte osobu'),
+        automaticallyImplyLeading: false,
+        title: Text('Editace'),
       ),
       body: Container(
         margin: EdgeInsets.all(10),
@@ -63,53 +69,32 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                 children: [
                   //jmeno
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: TextField(
-                      autofocus: false,
-                      controller: jmenoController,
-                      decoration: InputDecoration(
-                        hintText: widget.jmeno,
-                        border: OutlineInputBorder(),
-                      ),
+                    child: Text(
+                      widget.jmeno,
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.05,
+                    width: MediaQuery.of(context).size.width * 0.04,
                   ),
                   //prijmeni
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.45,
-                    child: TextField(
-                      autofocus: false,
-                      controller: prijmeniController,
-                      decoration: InputDecoration(
-                        hintText: widget.prijmeni,
-                        border: OutlineInputBorder(),
-                      ),
+                    child: Text(
+                      widget.prijmeni,
+                      style: TextStyle(fontSize: 20),
                     ),
                   ),
                 ],
               ),
               SizedBox(
-                height: MediaQuery.of(context).size.width * 0.02,
+                height: MediaQuery.of(context).size.width * 0.04,
               ),
               //bydliste
               SizedBox(
                 child: TextField(
                   controller: bydlisteController,
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('zaci')
-                              .doc('${widget.jmeno} ${widget.prijmeni}')
-                              .update({
-                            'bydliste': '${bydlisteController.text}',
-                          });
-                          _vymazVse();
-                        },
-                        icon: Icon(Icons.check)),
-                    hintText: widget.bydliste,
+                    hintText: 'Bydliště',
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -126,18 +111,7 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                       keyboardType: TextInputType.number,
                       controller: kontakt1Controller,
                       decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              FirebaseFirestore.instance
-                                  .collection('zaci')
-                                  .doc('${widget.jmeno} ${widget.prijmeni}')
-                                  .update({
-                                'kontakt1': '${kontakt1Controller.text}',
-                              });
-                              _vymazVse();
-                            },
-                            icon: Icon(Icons.check)),
-                        hintText: widget.kontakt1,
+                        hintText: 'Kontakt 1',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -152,18 +126,7 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                       keyboardType: TextInputType.number,
                       controller: kontakt2Controller,
                       decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              FirebaseFirestore.instance
-                                  .collection('zaci')
-                                  .doc('${widget.jmeno} ${widget.prijmeni}')
-                                  .update({
-                                'kontakt2': '${kontakt2Controller.text}',
-                              });
-                              _vymazVse();
-                            },
-                            icon: Icon(Icons.check)),
-                        hintText: widget.kontakt2,
+                        hintText: 'Kontakt 2',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -182,18 +145,7 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                       keyboardType: TextInputType.number,
                       controller: zaplacenoController,
                       decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            onPressed: () {
-                              FirebaseFirestore.instance
-                                  .collection('zaci')
-                                  .doc('${widget.jmeno} ${widget.prijmeni}')
-                                  .update({
-                                'zaplaceno': '${zaplacenoController.text}',
-                              });
-                              _vymazVse();
-                            },
-                            icon: Icon(Icons.check)),
-                        hintText: widget.zaplaceno,
+                        hintText: 'Zaplaceno',
                         border: OutlineInputBorder(),
                       ),
                     ),
@@ -213,11 +165,14 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                           onChanged: ((bool value) {
                             setState(() {
                               potvrzeno = value;
+                              datumGDPR =
+                                  DateFormat('dd.MM.yyyy').format(_datumDnesni);
                               FirebaseFirestore.instance
                                   .collection('zaci')
                                   .doc('${widget.jmeno} ${widget.prijmeni}')
                                   .update({
                                 'gdpr': '${potvrzeno}',
+                                'kdyGDPR': '${datumGDPR}',
                               });
                               _vymazVse();
                               //print(potvrzeno);
@@ -292,17 +247,6 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                 child: TextField(
                   controller: poznamkaController,
                   decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('zaci')
-                              .doc('${widget.jmeno} ${widget.prijmeni}')
-                              .update({
-                            'poznamka': '${poznamkaController.text}',
-                          });
-                          _vymazVse();
-                        },
-                        icon: Icon(Icons.check)),
                     hintText: widget.poznamka,
                     border: OutlineInputBorder(),
                     contentPadding: EdgeInsets.symmetric(
@@ -314,6 +258,69 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: const Icon(Icons.check),
+          onPressed: () {
+            if ('${bydlisteController.text}' == '') {
+              FirebaseFirestore.instance
+                  .collection('zaci')
+                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                  .update({
+                'kontakt1': '${kontakt1Controller.text}',
+                'kontakt2': '${kontakt2Controller.text}',
+                'zaplaceno': '${zaplacenoController.text}',
+                'poznamka': '${poznamkaController.text}',
+              });
+              _vymazVse();
+            } else if ('${kontakt1Controller.text}' == '') {
+              FirebaseFirestore.instance
+                  .collection('zaci')
+                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                  .update({
+                'bydliste': '${bydlisteController.text}',
+                'kontakt2': '${kontakt2Controller.text}',
+                'zaplaceno': '${zaplacenoController.text}',
+                'poznamka': '${poznamkaController.text}',
+              });
+              _vymazVse();
+            } else if ('${zaplacenoController.text}' == '') {
+              FirebaseFirestore.instance
+                  .collection('zaci')
+                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                  .update({
+                'bydliste': '${bydlisteController.text}',
+                'kontakt1': '${kontakt1Controller.text}',
+                'kontakt2': '${kontakt2Controller.text}',
+                'poznamka': '${poznamkaController.text}',
+              });
+              _vymazVse();
+            } else if ('${poznamkaController.text}' == '') {
+              FirebaseFirestore.instance
+                  .collection('zaci')
+                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                  .update({
+                'bydliste': '${bydlisteController.text}',
+                'kontakt1': '${kontakt1Controller.text}',
+                'kontakt2': '${kontakt2Controller.text}',
+                'zaplaceno': '${zaplacenoController.text}',
+              });
+              _vymazVse();
+            } else {
+              FirebaseFirestore.instance
+                  .collection('zaci')
+                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                  .update({
+                'bydliste': '${bydlisteController.text}',
+                'kontakt1': '${kontakt1Controller.text}',
+                'kontakt2': '${kontakt2Controller.text}',
+                'zaplaceno': '${zaplacenoController.text}',
+                'poznamka': '${poznamkaController.text}',
+              });
+              _vymazVse();
+            }
+
+            Navigator.pop(context);
+          }),
     );
   }
 

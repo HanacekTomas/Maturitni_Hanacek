@@ -6,26 +6,27 @@ import 'package:tadytento/stranky/pridatCloveka.dart';
 class NeniGDPR extends StatefulWidget {
   const NeniGDPR({super.key, required this.prihlasenyUzivatel});
 
-  final prihlasenyUzivatel;
+  final String prihlasenyUzivatel;
 
   @override
   State<NeniGDPR> createState() => _NeniGDPRState();
 }
 
 class _NeniGDPRState extends State<NeniGDPR> {
-  final jmenoController = new TextEditingController();
-  final prijmeniController = new TextEditingController();
-  final bydlisteController = new TextEditingController();
-  final kontakt1Controller = new TextEditingController();
-  final kontakt2Controller = new TextEditingController();
-  final zaplacenoController = new TextEditingController();
-  final poznamkaController = new TextEditingController();
-  final gdprController = new TextEditingController();
-  final krouzekController = new TextEditingController();
+  final jmenoController = TextEditingController();
+  final prijmeniController = TextEditingController();
+  final bydlisteController = TextEditingController();
+  final kontakt1Controller = TextEditingController();
+  final kontakt2Controller = TextEditingController();
+  final zaplacenoController = TextEditingController();
+  final poznamkaController = TextEditingController();
+  final gdprController = TextEditingController();
+  final krouzekController =  TextEditingController();
 
-  final Stream<QuerySnapshot> zaseData = FirebaseFirestore.instance
+  late Stream<QuerySnapshot> zaseData = FirebaseFirestore.instance
       .collection('zaci')
       .where('gdpr', isEqualTo: 'false')
+      .where('vytvorenoUctem', isEqualTo: widget.prihlasenyUzivatel)
       .snapshots();
 
   bool podminka = false;

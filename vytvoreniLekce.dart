@@ -29,7 +29,6 @@ class _VytvoreniLekceState extends State<VytvoreniLekce> {
 
   @override
   Widget build(BuildContext context) {
-    CollectionReference data = FirebaseFirestore.instance.collection('lekce');
     return Scaffold(
       appBar: AppBar(
         title: Text("Vytvořte/Vyberte lekci"),
@@ -103,7 +102,8 @@ class _VytvoreniLekceState extends State<VytvoreniLekce> {
                     onPressed: () {
                       FirebaseFirestore.instance
                           .collection('lekce')
-                          .doc('${nazevController.text}')
+                          .doc(
+                              '${nazevController.text} - ${prihlasenyUzivatel.email!}')
                           .set({
                         'nazevLekce': '${nazevController.text}',
                         'ucetLekce': '${prihlasenyUzivatel.email!}',

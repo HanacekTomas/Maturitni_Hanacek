@@ -117,6 +117,41 @@ class _SeznamLidiState extends State<SeznamLidi> {
               itemBuilder: (context, index) {
                 return Card(
                   child: ListTile(
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Smazání žáka'),
+                            content: Text(
+                                'Odstranit ${asiData.docs[index]['jmeno']} ${asiData.docs[index]['prijmeni']}?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Zrušit"),
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  'Odstranit',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection("zaci")
+                                      .doc(
+                                          "${asiData.docs[index]['jmeno']} ${asiData.docs[index]['prijmeni']}")
+                                      .delete();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                     onTap: () {
                       showModalBottomSheet(
                           context: context,
@@ -145,7 +180,7 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                       ? Text('Nedoplněno',
                                           style: TextStyle(color: Colors.red))
                                       : Text(
-                                          '${asiData.docs[index]['kontakt1']} ${asiData.docs[index]['kontakt2']}'),
+                                          '${asiData.docs[index]['kontakt1']} / ${asiData.docs[index]['kontakt2']}'),
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.group),
@@ -171,7 +206,8 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                           'false'
                                       ? Text('Zakázáno',
                                           style: TextStyle(color: Colors.red))
-                                      : Text('Povoleno',
+                                      : Text(
+                                          'Povoleno, ${asiData.docs[index]['kdyGDPR']}',
                                           style:
                                               TextStyle(color: Colors.green)),
                                 ),

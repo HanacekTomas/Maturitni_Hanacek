@@ -1,14 +1,15 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/intl.dart';
-import 'package:tadytento/stranky/zapsani.dart';
-import 'lide.dart';
+
 import 'package:tadytento/stranky/vytvoreniLekce.dart';
-import 'dart:math';
+import 'package:tadytento/stranky/zapsani.dart';
+
+import 'lide.dart';
 
 class HlavniStranka extends StatefulWidget {
   const HlavniStranka({
@@ -48,8 +49,6 @@ class _HlavniStrankaState extends State<HlavniStranka> {
       setState(() {
         _zvoleneDatum = value!;
       });
-
-      
 
       FirebaseFirestore.instance
           .collection('data')
@@ -167,6 +166,41 @@ class _HlavniStrankaState extends State<HlavniStranka> {
                       },
                       icon: Icon(Icons.arrow_forward_ios),
                     ),
+                    onLongPress: () {
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Smazání data'),
+                            content: Text(
+                                'Odstranit ${nejakaData.docs[index]['datum']}?'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Zrušit"),
+                              ),
+                              TextButton(
+                                child: const Text(
+                                  'Odstranit',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection("data")
+                                      .doc(
+                                          "${nejakaData.docs[index]['datum']} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!}")
+                                      .delete();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    },
                   ),
                 );
               },
@@ -181,10 +215,10 @@ class _HlavniStrankaState extends State<HlavniStranka> {
             )
           : FloatingActionButton.extended(
               onPressed: () {
-                    FirebaseFirestore.instance
+                FirebaseFirestore.instance
                     .collection('data')
                     .doc(
-                        '${DateFormat('dd.MM.yyyy').format(_datumDnesni)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!}') // popřípadě pokud by bylo více za den -->  - ${Random().nextInt(30)}
+                        '${DateFormat('dd.MM.yyyy').format(_datumDnesni)} - ${widget.nazevLekce} - ${prihlasenyUzivatel.email!}')
                     .set({
                   'upraveneDatum':
                       '${DateFormat('dd|MM|yyyy').format(_datumDnesni)}',
