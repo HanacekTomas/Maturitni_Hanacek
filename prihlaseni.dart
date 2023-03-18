@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
+import 'obnovaHesla.dart';
+
 class Prihlaseni extends StatefulWidget {
   final VoidCallback ukazRegistrace;
   const Prihlaseni({Key? key, required this.ukazRegistrace}) : super(key: key);
@@ -141,7 +143,19 @@ class _PrihlaseniState extends State<Prihlaseni> {
                     ),
                   ),
                   SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.05,
+                    height: MediaQuery.of(context).size.height * 0.01,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ObnovaHesla()));
+                    },
+                    child: Text('Zapoměli jste heslo?'),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.04,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,

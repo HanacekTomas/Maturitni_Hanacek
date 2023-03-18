@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tadytento/auth/autorizacni.dart';
 import 'package:tadytento/stranky/hlavniStranka.dart';
 import 'package:tadytento/auth/prihlaseni.dart';
+import 'package:tadytento/stranky/vytvoreniLekce.dart';
 
 class Cesty extends StatefulWidget {
   const Cesty({super.key});
@@ -10,6 +11,8 @@ class Cesty extends StatefulWidget {
   @override
   State<Cesty> createState() => _CestyState();
 }
+
+final prihlasenyUzivatel = FirebaseAuth.instance.currentUser!;
 
 class _CestyState extends State<Cesty> {
   @override
@@ -19,8 +22,9 @@ class _CestyState extends State<Cesty> {
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return HlavniStranka(
-              nazevLekce: 'Lekce není vybraná',
+            return VytvoreniLekce(
+              aktualniUzivatel: '${prihlasenyUzivatel.email}',
+              vybranaLekce: 'Lekce není vybraná',
             );
           } else {
             return Autorizacni();

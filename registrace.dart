@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Registrace extends StatefulWidget {
@@ -17,6 +17,7 @@ class _RegistraceState extends State<Registrace> {
   final _spravneHesloController = new TextEditingController();
 
   bool schovatHeslo = true;
+  String errorZprava = '';
 
   @override
   void dispose() {
@@ -27,10 +28,22 @@ class _RegistraceState extends State<Registrace> {
   }
 
   Future registrace() async {
-    if (hesloSpravne()) {
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+    try {
+      if (hesloSpravne()) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
           email: _emailController.text.trim(),
-          password: _hesloController.text.trim());
+          password: _hesloController.text.trim(),
+        );
+      }
+      errorZprava = '';
+    } on FirebaseAuthException catch (error) {
+      errorZprava = error.message!;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: errorZprava == errorZprava
+            ? Text('Uživatelský účet již existuje')
+            : Text('Uživatelský účet již existuje'),
+        backgroundColor: Color.fromARGB(255, 187, 12, 0),
+      ));
     }
   }
 
@@ -126,15 +139,6 @@ class _RegistraceState extends State<Registrace> {
                     child: TextFormField(
                       obscureText: schovatHeslo,
                       controller: _hesloController,
-                      validator: (value) {
-                        if (value!.isEmpty || value.length < 6) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.red,
-                              content: Text(
-                                  "Heslo musí obsahovat alespoň 6 znaků")));
-                        }
-                        return null;
-                      },
                       decoration: InputDecoration(
                         suffixIcon: IconButton(
                           icon: Icon(Icons.remove_red_eye),
