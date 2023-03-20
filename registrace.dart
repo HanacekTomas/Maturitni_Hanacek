@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../main.dart';
+
 class Registrace extends StatefulWidget {
   final VoidCallback ukazPrihlaseni;
   const Registrace({Key? key, required this.ukazPrihlaseni}) : super(key: key);
@@ -69,7 +71,7 @@ class _RegistraceState extends State<Registrace> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white,
+                color: Barvy.bilaPodklad,
               ),
               width: MediaQuery.of(context).size.width * 0.90,
               child: Column(
@@ -94,15 +96,15 @@ class _RegistraceState extends State<Registrace> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Email',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -118,15 +120,15 @@ class _RegistraceState extends State<Registrace> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Heslo',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -156,15 +158,15 @@ class _RegistraceState extends State<Registrace> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Heslo znovu',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -179,13 +181,13 @@ class _RegistraceState extends State<Registrace> {
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple,
+                          color: Barvy.fialova,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
                           child: Text(
                             'Registrovat',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Barvy.bilaPodklad, fontSize: 16),
                           ),
                         ),
                       ),

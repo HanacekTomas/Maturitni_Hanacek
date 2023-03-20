@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
+import '../main.dart';
 import 'obnovaHesla.dart';
 
 class Prihlaseni extends StatefulWidget {
@@ -37,14 +38,14 @@ class _PrihlaseniState extends State<Prihlaseni> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromARGB(255, 121, 77, 197),
+      backgroundColor: Barvy.fialova,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white,
+                color: Barvy.bilaPodklad,
               ),
               width: MediaQuery.of(context).size.width * 0.90,
               child: Column(
@@ -69,15 +70,15 @@ class _PrihlaseniState extends State<Prihlaseni> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Email',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -107,15 +108,15 @@ class _PrihlaseniState extends State<Prihlaseni> {
                         ),
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Heslo',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -130,13 +131,13 @@ class _PrihlaseniState extends State<Prihlaseni> {
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple,
+                          color: Barvy.fialova,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
                           child: Text(
                             'Přihlásit',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Barvy.bilaPodklad, fontSize: 16),
                           ),
                         ),
                       ),

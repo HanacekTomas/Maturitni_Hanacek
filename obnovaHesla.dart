@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
+import '../main.dart';
+
 class ObnovaHesla extends StatefulWidget {
   const ObnovaHesla({Key? key}) : super(key: key);
 
@@ -25,7 +27,7 @@ class _ObnovaHeslaState extends State<ObnovaHesla> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(Radius.circular(20)),
-                color: Colors.white,
+                color: Barvy.bilaPodklad,
               ),
               width: MediaQuery.of(context).size.width * 0.90,
               child: Column(
@@ -50,15 +52,15 @@ class _ObnovaHeslaState extends State<ObnovaHesla> {
                       decoration: InputDecoration(
                         enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(color: Colors.grey, width: 2),
+                          borderSide: BorderSide(color: Barvy.seda, width: 2),
                         ),
                         focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(12),
                           borderSide:
-                              BorderSide(color: Colors.deepPurple, width: 2),
+                              BorderSide(color: Barvy.fialova, width: 2),
                         ),
                         hintText: 'Email',
-                        fillColor: Colors.white,
+                        fillColor: Barvy.bilaPodklad,
                         filled: true,
                       ),
                     ),
@@ -72,7 +74,7 @@ class _ObnovaHeslaState extends State<ObnovaHesla> {
                       onTap: () {
                         if (_emailController.text == "") {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                              backgroundColor: Colors.red,
+                              backgroundColor: Barvy.snackbarCervena,
                               content: Text("Email musí být vyplněn")));
                         } else {
                           FirebaseAuth.instance.sendPasswordResetEmail(
@@ -83,13 +85,13 @@ class _ObnovaHeslaState extends State<ObnovaHesla> {
                       child: Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.deepPurple,
+                          color: Barvy.fialova,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Center(
                           child: Text(
                             'ODESLAT EMAIL',
-                            style: TextStyle(color: Colors.white, fontSize: 16),
+                            style: TextStyle(color: Barvy.bilaPodklad, fontSize: 16),
                           ),
                         ),
                       ),
