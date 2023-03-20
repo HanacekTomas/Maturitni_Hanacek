@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../main.dart';
+
 class EditovaniCloveka extends StatefulWidget {
   EditovaniCloveka({
     Key? key,
@@ -38,6 +40,7 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
   final poznamkaController = new TextEditingController();
 
   bool potvrzeno = false;
+  bool zaplaceno = false;
 
   String krouzek = '';
 
@@ -141,13 +144,27 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                   //zaplaceno
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.33,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      controller: zaplacenoController,
-                      decoration: InputDecoration(
-                        hintText: 'Zaplaceno',
-                        border: OutlineInputBorder(),
-                      ),
+                    child: Column(
+                      children: [
+                        Text('GDPR'),
+                        Switch(
+                          value: zaplaceno,
+                          activeColor: Barvy.barvaAktivnihoTlacitka,
+                          onChanged: ((bool value) {
+                            setState(() {
+                              potvrzeno = value;
+                              FirebaseFirestore.instance
+                                  .collection('zaci')
+                                  .doc('${widget.jmeno} ${widget.prijmeni}')
+                                  .update({
+                                'zaplaceno': '${zaplaceno}',
+                              });
+                              _vymazVse();
+                              //print(potvrzeno);
+                            });
+                          }),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -161,7 +178,7 @@ class _EditovaniClovekaState extends State<EditovaniCloveka> {
                         Text('GDPR'),
                         Switch(
                           value: potvrzeno,
-                          activeColor: Colors.green,
+                          activeColor: Barvy.barvaAktivnihoTlacitka,
                           onChanged: ((bool value) {
                             setState(() {
                               potvrzeno = value;

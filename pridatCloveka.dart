@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../main.dart';
+
 class PridatLidi extends StatefulWidget {
   const PridatLidi({
     super.key,
@@ -27,6 +29,7 @@ class _PridatLidiState extends State<PridatLidi> {
   String datumGDPR = '';
 
   bool potvrzeno = false;
+  bool zaplaceno = false;
 
   String krouzek = '';
 
@@ -137,13 +140,19 @@ class _PridatLidiState extends State<PridatLidi> {
                   //zaplaceno
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.33,
-                    child: TextField(
-                      keyboardType: TextInputType.number,
-                      controller: zaplacenoController,
-                      decoration: InputDecoration(
-                        hintText: "Zaplaceno",
-                        border: OutlineInputBorder(),
-                      ),
+                    child: Column(
+                      children: [
+                        Text('Zaplaceno'),
+                        Switch(
+                          value: zaplaceno,
+                          activeColor: Barvy.barvaAktivnihoTlacitka,
+                          onChanged: ((bool value) {
+                            setState(() {
+                              zaplaceno = value;
+                            });
+                          }),
+                        ),
+                      ],
                     ),
                   ),
                   SizedBox(
@@ -157,7 +166,7 @@ class _PridatLidiState extends State<PridatLidi> {
                         Text('GDPR'),
                         Switch(
                           value: potvrzeno,
-                          activeColor: Colors.green,
+                          activeColor: Barvy.barvaAktivnihoTlacitka,
                           onChanged: ((bool value) {
                             setState(() {
                               potvrzeno = value;
@@ -259,7 +268,7 @@ class _PridatLidiState extends State<PridatLidi> {
               'bydliste': '${bydlisteController.text}',
               'kontakt1': '${kontakt1Controller.text}',
               'kontakt2': '${kontakt2Controller.text}',
-              'zaplaceno': '${zaplacenoController.text}',
+              'zaplaceno': '${zaplaceno}',
               'gdpr': '${potvrzeno}',
               'krouzek': '${krouzek}',
               'poznamka': '${poznamkaController.text}',

@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:tadytento/stranky/vytvoreniLekce.dart';
 import 'package:tadytento/stranky/zapsani.dart';
 
+import '../main.dart';
 import 'lide.dart';
 
 class HlavniStranka extends StatefulWidget {
@@ -118,8 +119,8 @@ class _HlavniStrankaState extends State<HlavniStranka> {
                   if (widget.nazevLekce == 'Lekce není vybraná') {
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                       content: Text("Vyberte prosím lekci",
-                          style: TextStyle(color: Colors.white)),
-                      backgroundColor: Colors.red,
+                          style: TextStyle(color: Barvy.snackbarText)),
+                      backgroundColor: Barvy.snackbarCervena,
                     ));
                   } else {
                     _ukazKalendar();
@@ -183,9 +184,9 @@ class _HlavniStrankaState extends State<HlavniStranka> {
                                 child: const Text("Zrušit"),
                               ),
                               TextButton(
-                                child: const Text(
+                                child: Text(
                                   'Odstranit',
-                                  style: TextStyle(color: Colors.red),
+                                  style: TextStyle(color: Barvy.barvaTlacitkaOdstranit),
                                 ),
                                 onPressed: () {
                                   FirebaseFirestore.instance

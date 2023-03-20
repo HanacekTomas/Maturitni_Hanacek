@@ -7,6 +7,8 @@ import 'package:tadytento/stranky/gdpr.dart';
 import 'package:tadytento/stranky/nezaplaceni.dart';
 import 'package:tadytento/stranky/pridatCloveka.dart';
 
+import '../main.dart';
+
 class SeznamLidi extends StatefulWidget {
   const SeznamLidi(
       {super.key, required this.prihlasenyUzivatel, required this.nazevLekce});
@@ -134,9 +136,10 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                 child: const Text("Zrušit"),
                               ),
                               TextButton(
-                                child: const Text(
+                                child: Text(
                                   'Odstranit',
-                                  style: TextStyle(color: Colors.red),
+                                  style: TextStyle(
+                                      color: Barvy.barvaTlacitkaOdstranit),
                                 ),
                                 onPressed: () {
                                   FirebaseFirestore.instance
@@ -169,7 +172,8 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                   title: '${asiData.docs[index]['bydliste']}' ==
                                           ''
                                       ? Text('Nedoplněno',
-                                          style: TextStyle(color: Colors.red))
+                                          style: TextStyle(
+                                              color: Barvy.nedoplnenaInfo))
                                       : Text(
                                           '${asiData.docs[index]['bydliste']}'),
                                 ),
@@ -178,7 +182,8 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                   title: '${asiData.docs[index]['kontakt1']}' ==
                                           ''
                                       ? Text('Nedoplněno',
-                                          style: TextStyle(color: Colors.red))
+                                          style: TextStyle(
+                                              color: Barvy.nedoplnenaInfo))
                                       : Text(
                                           '${asiData.docs[index]['kontakt1']} / ${asiData.docs[index]['kontakt2']}'),
                                 ),
@@ -187,7 +192,8 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                   title: '${asiData.docs[index]['krouzek']}' ==
                                           ''
                                       ? Text('Nedoplněno',
-                                          style: TextStyle(color: Colors.red))
+                                          style: TextStyle(
+                                              color: Barvy.nedoplnenaInfo))
                                       : Text(
                                           '${asiData.docs[index]['krouzek']}'),
                                 ),
@@ -196,7 +202,8 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                   title: '${asiData.docs[index]['zaplaceno']}' ==
                                           ''
                                       ? Text('Nedoplněno',
-                                          style: TextStyle(color: Colors.red))
+                                          style: TextStyle(
+                                              color: Barvy.nedoplnenaInfo))
                                       : Text(
                                           '${asiData.docs[index]['zaplaceno']}'),
                                 ),
@@ -205,11 +212,12 @@ class _SeznamLidiState extends State<SeznamLidi> {
                                   title: '${asiData.docs[index]['gdpr']}' ==
                                           'false'
                                       ? Text('Zakázáno',
-                                          style: TextStyle(color: Colors.red))
+                                          style: TextStyle(
+                                              color: Barvy.gdprZakazano))
                                       : Text(
                                           'Povoleno, ${asiData.docs[index]['kdyGDPR']}',
-                                          style:
-                                              TextStyle(color: Colors.green)),
+                                          style: TextStyle(
+                                              color: Barvy.gdprPovoleno)),
                                 ),
                                 ListTile(
                                   leading: Icon(Icons.speaker_notes),

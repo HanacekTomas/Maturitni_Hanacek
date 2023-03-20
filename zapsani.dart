@@ -1,7 +1,7 @@
-import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import '../main.dart';
 
 class ZapsaniDochazky extends StatefulWidget {
   const ZapsaniDochazky(
@@ -38,6 +38,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
           isEqualTo: 'přítomen')
       .snapshots();
 
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,20 +85,19 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                     ''
                             ? Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(color: Barvy.nedoplnenaInfo),
                               )
                             : Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                        tileColor: Color.fromARGB(255, 223, 166, 166),
+                        tileColor: Barvy.neniPodklad,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.check,
-                                  color: Color.fromARGB(255, 0, 134, 4)),
+                              icon: Icon(Icons.check, color: Barvy.neniFajfka),
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: Barvy.barvaAktivnihoTlacitka,
                                     content: Text(
                                         "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} je přítomen")));
 
@@ -139,7 +139,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['bydliste']}'),
                                     ),
@@ -149,7 +149,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
                                     ),
@@ -159,7 +159,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['krouzek']}'),
                                     ),
@@ -169,7 +169,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['zaplaceno']}'),
                                     ),
@@ -179,11 +179,11 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               'false'
                                           ? Text('Zakázáno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.gdprZakazano))
                                           : Text(
                                               'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
                                               style: TextStyle(
-                                                  color: Colors.green)),
+                                                  color: Barvy.gdprPovoleno)),
                                     ),
                                     ListTile(
                                       leading: Icon(Icons.speaker_notes),
@@ -224,20 +224,20 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                     ''
                             ? Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(color: Barvy.nedoplnenaInfo),
                               )
                             : Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                        tileColor: Colors.white,
+                        tileColor: Barvy.bilaPodklad,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.check,
-                                  color: Color.fromARGB(255, 0, 134, 4)),
+                              icon: Icon(Icons.check,
+                                  color: Barvy.neniFajfka),
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.green,
+                                    backgroundColor: Barvy.barvaAktivnihoTlacitka,
                                     content: Text(
                                         "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} je přítomen")));
 
@@ -260,11 +260,11 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                               },
                             ),
                             IconButton(
-                              icon: const Icon(Icons.clear,
-                                  color: Color.fromARGB(255, 154, 18, 8)),
+                              icon: Icon(Icons.clear,
+                                  color: Barvy.jeKrizek),
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: Barvy.snackbarCervena,
                                     content: Text(
                                         "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} není přítomen")));
 
@@ -306,7 +306,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.snackbarCervena))
                                           : Text(
                                               '${dochazkoveData.docs[index]['bydliste']}'),
                                     ),
@@ -316,7 +316,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.snackbarCervena))
                                           : Text(
                                               '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
                                     ),
@@ -326,7 +326,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.snackbarCervena))
                                           : Text(
                                               '${dochazkoveData.docs[index]['krouzek']}'),
                                     ),
@@ -336,7 +336,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.snackbarCervena))
                                           : Text(
                                               '${dochazkoveData.docs[index]['zaplaceno']}'),
                                     ),
@@ -346,11 +346,11 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               'false'
                                           ? Text('Zakázáno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.gdprZakazano))
                                           : Text(
                                               'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
                                               style: TextStyle(
-                                                  color: Colors.green)),
+                                                  color: Barvy.gdprPovoleno)),
                                     ),
                                     ListTile(
                                       leading: Icon(Icons.speaker_notes),
@@ -391,20 +391,19 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                     ''
                             ? Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}',
-                                style: TextStyle(color: Colors.red),
+                                style: TextStyle(color: Barvy.nedoplnenaInfo),
                               )
                             : Text(
                                 '${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']}'),
-                        tileColor: Color.fromARGB(255, 162, 220, 175),
+                        tileColor: Barvy.jePodklad,
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.clear,
-                                  color: Color.fromARGB(255, 154, 18, 8)),
+                              icon: Icon(Icons.clear, color: Barvy.jeKrizek),
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: Barvy.snackbarCervena,
                                     content: Text(
                                         "${dochazkoveData.docs[index]['jmeno']} ${dochazkoveData.docs[index]['prijmeni']} není přítomen")));
 
@@ -446,7 +445,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['bydliste']}'),
                                     ),
@@ -456,7 +455,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['kontakt1']} / ${dochazkoveData.docs[index]['kontakt2']}'),
                                     ),
@@ -466,7 +465,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['krouzek']}'),
                                     ),
@@ -476,7 +475,7 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               ''
                                           ? Text('Nedoplněno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.nedoplnenaInfo))
                                           : Text(
                                               '${dochazkoveData.docs[index]['zaplaceno']}'),
                                     ),
@@ -486,11 +485,11 @@ class _ZapsaniDochazkyState extends State<ZapsaniDochazky> {
                                               'false'
                                           ? Text('Zakázáno',
                                               style:
-                                                  TextStyle(color: Colors.red))
+                                                  TextStyle(color: Barvy.gdprZakazano))
                                           : Text(
                                               'Povoleno, ${dochazkoveData.docs[index]['kdyGDPR']}',
                                               style: TextStyle(
-                                                  color: Colors.green)),
+                                                  color: Barvy.gdprPovoleno)),
                                     ),
                                     ListTile(
                                       leading: Icon(Icons.speaker_notes),
